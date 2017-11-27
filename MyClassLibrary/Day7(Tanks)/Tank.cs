@@ -33,7 +33,7 @@ namespace MyClassLibrary
         public static Random rnd = new Random();
         public Tank()
         {
-            this.name = (tankName)rnd.Next(0, 1);
+            this.name = (tankName)rnd.Next(0, 2);
             this.armor = rnd.Next(0, 101);
             this.amunition = rnd.Next(0, 101);
             this.mobility = rnd.Next(0, 101);
