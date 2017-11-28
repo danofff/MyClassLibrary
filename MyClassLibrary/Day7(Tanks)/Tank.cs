@@ -6,79 +6,78 @@ using System.Threading.Tasks;
 
 namespace MyClassLibrary
 {
-    public enum tankName { T_34, Pantera}
+    public enum TankName { T34, Pantera }
+
     public class Tank
     {
-        private tankName name;
-        public tankName Name
+
+        /*
+         * ПОМНИМ избыточное обращение с испольованием this не нужно. 
+         * this применяется только тогда когда у вас присутствуют одинаковыеимена, или же 
+         * вам необходимо использовать именно это свойство, в этом классе, т.к. такое же есть в базовом классе
+         */
+        public TankName Name { get; private set; }
+        public int Armor { get; private set; }
+        public int Amunition { get; private set; }
+        public int Mobility { get; private set; }
+
+        private static Random rnd = new Random();
+
+        public Tank() : this(TankName.T34)
         {
-            get { return name; }
-        }
-        private int armor;
-        public int Armor
-        {
-            get { return armor; }
+            this.Name = (TankName)rnd.Next(0, 2);
         }
 
-        private int amunition;
-        public int Amunition
+        public Tank(TankName name) : this(name, 0, 0, 0) { }
+
+        public Tank(TankName name, int armor, int amunition, int mobility)
         {
-            get { return amunition; }
-        }
-        private int mobility;
-        public int Mobility
-        {
-            get { return mobility; }
-        }
-        public static Random rnd = new Random();
-        public Tank()
-        {
-            this.name = (tankName)rnd.Next(0, 2);
-            this.armor = rnd.Next(0, 101);
-            this.amunition = rnd.Next(0, 101);
-            this.mobility = rnd.Next(0, 101);
-        }
-        public Tank(tankName name)
-        {
-            this.name = name;
-            this.armor = rnd.Next(0, 101);
-            this.amunition = rnd.Next(0, 101);
-            this.mobility = rnd.Next(0, 101);
-        }
-        public Tank(tankName name,int armor, int amunition,int mobility)
-        {
+            this.Armor = rnd.Next(0, 101);
+            this.Amunition = rnd.Next(0, 101);
+            this.Mobility = rnd.Next(0, 101);
+
             if (armor > 0 && armor <= 100)
-                this.armor = armor;
+                this.Armor = armor;
             else
-                this.armor = rnd.Next(0, 101);
+                this.Armor = rnd.Next(0, 101);
 
             if (amunition > 0 && amunition <= 100)
-                this.amunition = amunition;
+                this.Amunition = amunition;
             else
-                this.amunition = rnd.Next(0, 101);
+                this.Amunition = rnd.Next(0, 101);
 
             if (mobility > 0 && mobility <= 100)
-                this.mobility = mobility;
+                this.Mobility = mobility;
             else
-                this.mobility = rnd.Next(0, 101);
+                this.Mobility = rnd.Next(0, 101);
 
-            this.name = name;
+            this.Name = name;
         }
-        public void printInfo()
+
+        /// <summary>
+        /// Метод вывода информации о Танке
+        /// </summary>
+        public void PrintInfo()
         {
-            if (this.Name == tankName.T_34)
-                Console.ForegroundColor = ConsoleColor.Green;
-            else
-                Console.ForegroundColor = ConsoleColor.Red;
+            Console.ForegroundColor = Name == TankName.T34 ? ConsoleColor.Green : ConsoleColor.Red;
+
             Console.WriteLine("--------------------");
-            Console.WriteLine($"MODEL: {this.Name}");
-            Console.WriteLine($"ARMOR: {this.Armor}");
-            Console.WriteLine($"AMUNITION: {this.Amunition}");
-            Console.WriteLine($"MOBILITY: {this.Mobility}");
+            Console.WriteLine("MODEL: {0}", Name);
+            Console.WriteLine("ARMOR: {0}", Armor);
+            Console.WriteLine("AMUNITION: {0}", Amunition);
+            Console.WriteLine("MOBILITY: {0}", Mobility);
             Console.WriteLine("--------------------");
+
             Console.ResetColor();
         }
-        public static int operator ^(Tank tank1,Tank tank2)
+
+        /// <summary>
+        /// АДСКАЯ Перегрузка оператора
+        /// </summary>
+        /// <param name="tank1">Танк 1</param>
+        /// <param name="tank2">Танк 2</param>
+        /// <returns></returns>
+        public static int operator ^(Tank tank1, Tank tank2)
         {
             //условие когда все три показателя равны
             if (tank1.Amunition == tank2.Amunition && tank1.Mobility == tank2.Mobility && tank1.Armor == tank2.Armor)
@@ -113,7 +112,7 @@ namespace MyClassLibrary
                     }
                     if (tank1.Amunition > tank2.Amunition && tank1.Mobility < tank2.Mobility)
                     {
-                        return (tank1.Amunition-tank2.Amunition>tank2.Mobility-tank1.Mobility)?1:2;
+                        return (tank1.Amunition - tank2.Amunition > tank2.Mobility - tank1.Mobility) ? 1 : 2;
                     }
                     if (tank1.Amunition < tank2.Amunition && tank1.Mobility > tank2.Mobility)
                     {
@@ -156,7 +155,7 @@ namespace MyClassLibrary
                     }
                     if (tank1.Armor < tank2.Armor && tank1.Amunition > tank2.Amunition)
                     {
-                        return (tank2.Armor - tank1.Armor > tank1.Amunition - tank2.Amunition) ? 1 : 2; 
+                        return (tank2.Armor - tank1.Armor > tank1.Amunition - tank2.Amunition) ? 1 : 2;
                     }
                 }
                 //условия, когда все показатели отличны
@@ -172,6 +171,5 @@ namespace MyClassLibrary
                 }
             }
         }
-        
     }
 }
